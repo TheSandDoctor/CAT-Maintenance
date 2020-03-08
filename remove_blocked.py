@@ -5,6 +5,10 @@ if __name__ == "__main__":
     site = pywikibot.Site(fam="wikipedia", code="en", user="TheSandBot")
     pattern = r'(?:User talk:)([^/\n]+)'
     for page in pywikibot.Category(site, "Wikipedia usernames with possible policy issues").articles():
+        with open("log.txt", 'a+') as f:
+            f.write(str(page.title()) + "\n")
+        if page.title() == "User:Maxim/rmuaa.js":
+            continue
         m = re.search(pattern, str(page.title()))
         user_raw = m.group(1)
         user = pywikibot.User(site, user_raw)
