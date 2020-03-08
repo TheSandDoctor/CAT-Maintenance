@@ -7,13 +7,12 @@ if __name__ == "__main__":
     for page in pywikibot.Category(site, "Wikipedia usernames with possible policy issues").articles():
         with open("log.txt", 'a+') as f:
             f.write(str(page.title()) + "\n")
-        if page.title() == "User:Maxim/rmuaa.js":
+        if page.title() == "Template:Uw-corpname":
             continue
         m = re.search(pattern, str(page.title()))
         user_raw = m.group(1)
         user = pywikibot.User(site, user_raw)
         if user.isBlocked():
-            # TODO: remove
             page.text = page.text.replace("[[Category:Wikipedia usernames with possible policy issues|{{PAGENAME}}]]",
                                           "")
             page.save(
