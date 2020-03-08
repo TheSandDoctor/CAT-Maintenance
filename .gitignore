@@ -1,0 +1,10 @@
+2019.txt
+2020.txt
+removed.txt
+user-config.py
+user-password.py
+apicache-py3/
+pywikibot.lwp
+throttle.ctrl
+venv/
+.idea/
