@@ -4,6 +4,7 @@ import re
 if __name__ == "__main__":
     site = pywikibot.Site(fam="wikipedia", code="en", user="TheSandBot")
     pattern = r'(?:User talk:)([^/\n]+)'
+    count = 0
     for page in pywikibot.Category(site, "Wikipedia usernames with possible policy issues").articles():
         if page.title() == "Template:Uw-corpname":
             continue
@@ -11,8 +12,9 @@ if __name__ == "__main__":
         user_raw = m.group(1)
         user = pywikibot.User(site, user_raw)
         if user.isBlocked():
-            with open("block_removed_mar_9_2020.txt", 'a+') as f:
-                f.write(str(page.title()) + "\n")
+            with open("block_removed_mar_14_2020.txt", 'a+') as f:
+                count += 1
+                f.write(str(count) + " " + str(page.title()) + "\n")
             page.text = page.text.replace("[[Category:Wikipedia usernames with possible policy issues|{{PAGENAME}}]]",
                                           "")
             page.save(
