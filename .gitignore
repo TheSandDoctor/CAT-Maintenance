@@ -6,3 +6,4 @@ pywikibot.lwp
 throttle.ctrl
 venv/
 .idea/
+__pycache__/
