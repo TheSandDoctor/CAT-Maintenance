@@ -4,7 +4,7 @@ import requests
 
 
 class RemoveBase:
-    def __init__(self, log_name, category):
+    def __init__(self, log_name, category, trial = False):
         self.pattern = r'(?:User talk:)([^/\n]+)'
         self.site = pywikibot.Site()  # fam="wikipedia", code="en", user="TheSandBot")
         self.count = 0
@@ -16,6 +16,7 @@ class RemoveBase:
             print("\nBad category title")
             exit()
         self.cat_name = category
+        self.trial = trial
 
     def category_remove(self, target: str, page: pywikibot.Page) -> None:
         """
@@ -49,38 +50,52 @@ class RemoveBase:
 
 
 class RemoveBlocked(RemoveBase):
-    def __init__(self, log_name, category, target, brfa):
-        super(RemoveBlocked, self).__init__(log_name, category)
+    def __init__(self, log_name, category, target, brfa, trial=False, count=50):
+        super(RemoveBlocked, self).__init__(log_name, category, trial)
         self.target = target
         self.brfa = brfa
+        if trial:
+            self.count = count
 
     def run(self):
+        counter = 0
         for page in self.category:
             if page.title() == "Template:Uw-corpname":
                 continue
-            user = self.generate_user(page)
-
+            if counter >= self.count:
+                print("\n\nDONE TRIAL\n\n")
+                return
+            try:
+                user = self.generate_user(page)
+            except AttributeError:
+                print("Failed" + page.title())
+                continue
+            summary = "Removing [[Category:" + self.cat_name + "]] as user is "
             if self.isLocked(user.username):
                 self.log(page)
                 self.category_remove(self.target, page)
                 page.save(
-                    summary="Removing " + self.cat_name + " as user is locked." +
+                    summary=summary + "locked." +
                             " ([[Wikipedia:Bots/Requests for approval/" + self.brfa + "|BRFA]])", minor=True,
                     botflag=True, force=True)
                 print("Saved " + str(page.title()))
+                if self.trial:
+                    counter += 1
             elif user.isBlocked():
                 self.log(page)
                 self.category_remove(self.target, page)
                 page.save(
-                    summary="Removing " + self.cat_name + " as user is blocked." +
+                    summary=summary + "blocked." +
                             " ([[Wikipedia:Bots/Requests for approval/" + self.brfa + "|BRFA]])", minor=True,
                     botflag=True, force=True)
                 print("Saved " + str(page.title()))
+                if self.trial:
+                    counter += 1
 
 
 class RemoveUnblocked(RemoveBase):
-    def __init__(self, log_name, category, target, backup_target, brfa):
-        super(RemoveUnblocked, self).__init__(log_name, category)
+    def __init__(self, log_name, category, target, backup_target, brfa, trial = False):
+        super(RemoveUnblocked, self).__init__(log_name, category, trial)
         self.target = target
         self.backup_target = backup_target
         self.brfa = brfa
@@ -102,7 +117,7 @@ class RemoveUnblocked(RemoveBase):
                     print("Move to backup")
                     self.category_remove(self.backup_target, page)
                 page.save(
-                    summary="Removing " + self.cat_name + " as user is unblocked." +
+                    summary="Removing [[Category:" + self.cat_name + "]] as user is unblocked." +
                             " ([[Wikipedia:Bots/Requests for approval/" + self.brfa + "|BRFA]])", minor=True,
                     botflag=True, force=True)
                 print("Saved " + str(page.title()))
