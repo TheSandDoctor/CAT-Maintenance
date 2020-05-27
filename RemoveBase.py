@@ -62,9 +62,10 @@ class RemoveBlocked(RemoveBase):
         for page in self.category:
             if page.title() == "Template:Uw-corpname":
                 continue
-            if counter >= self.count:
-                print("\n\nDONE TRIAL\n\n")
-                return
+            if self.trial:
+                if counter >= self.count:
+                    print("\n\nDONE TRIAL\n\n")
+                    return
             try:
                 user = self.generate_user(page)
             except AttributeError:
