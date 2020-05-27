@@ -97,7 +97,7 @@ class RemoveBlocked(RemoveBase):
                         counter += 1
                         print(counter)
             except KeyError:
-                print("No global account")
+                #print("No global account")
                 if user.isBlocked():
                     self.log(page)
                     self.category_remove(self.target, page)
