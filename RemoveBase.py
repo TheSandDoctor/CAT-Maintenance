@@ -71,26 +71,43 @@ class RemoveBlocked(RemoveBase):
                 print("Failed" + page.title())
                 continue
             summary = "Removing [[Category:" + self.cat_name + "]] as user is "
-            if self.isLocked(user.username):
-                self.log(page)
-                self.category_remove(self.target, page)
-                page.save(
-                    summary=summary + "locked." +
-                            " ([[Wikipedia:Bots/Requests for approval/" + self.brfa + "|BRFA]])", minor=True,
-                    botflag=True, force=True)
-                print("Saved " + str(page.title()))
-                if self.trial:
-                    counter += 1
-            elif user.isBlocked():
-                self.log(page)
-                self.category_remove(self.target, page)
-                page.save(
-                    summary=summary + "blocked." +
-                            " ([[Wikipedia:Bots/Requests for approval/" + self.brfa + "|BRFA]])", minor=True,
-                    botflag=True, force=True)
-                print("Saved " + str(page.title()))
-                if self.trial:
-                    counter += 1
+            #print(user.username)
+            try:
+                if self.isLocked(user.username):
+                    self.log(page)
+                    self.category_remove(self.target, page)
+                    page.save(
+                        summary=summary + "locked." +
+                                " ([[Wikipedia:Bots/Requests for approval/" + self.brfa + "|BRFA]])", minor=True,
+                        botflag=True, force=True)
+                    print("Saved " + str(page.title()))
+                    if self.trial:
+                        counter += 1
+                        print(counter)
+                elif user.isBlocked():
+                    self.log(page)
+                    self.category_remove(self.target, page)
+                    page.save(
+                        summary=summary + "blocked." +
+                                " ([[Wikipedia:Bots/Requests for approval/" + self.brfa + "|BRFA]])", minor=True,
+                        botflag=True, force=True)
+                    print("Saved " + str(page.title()))
+                    if self.trial:
+                        counter += 1
+                        print(counter)
+            except KeyError:
+                print("No global account")
+                if user.isBlocked():
+                    self.log(page)
+                    self.category_remove(self.target, page)
+                    page.save(
+                        summary=summary + "blocked." +
+                                " ([[Wikipedia:Bots/Requests for approval/" + self.brfa + "|BRFA]])", minor=True,
+                        botflag=True, force=True)
+                    print("Saved " + str(page.title()))
+                    if self.trial:
+                        counter += 1
+                        print(counter)
 
 
 class RemoveUnblocked(RemoveBase):
