@@ -1,7 +1,6 @@
 import pywikibot
 import re
 import requests
-#import datetime
 from datetime import *
 from dateutil import relativedelta
 
@@ -47,7 +46,6 @@ class RemoveBase:
 
     def log(self, page):
         with open(self.log_filename, 'a+') as f:
-            # self.count += 1
             f.write(str(page.title()) + "\n")
 
 
@@ -75,7 +73,6 @@ class RemoveBlocked(RemoveBase):
                 print("Failed" + page.title())
                 continue
             summary = "Removing [[Category:" + self.cat_name + "]] as "
-            #print(user.username)
             try:
                 if self.isLocked(user.username):
                     self.log(page)
@@ -84,7 +81,6 @@ class RemoveBlocked(RemoveBase):
                         summary=summary + "user is locked." +
                                 " ([[Wikipedia:Bots/Requests for approval/" + self.brfa + "|BRFA]])", minor=True,
                         botflag=True, force=True)
-                    #print("Saved " + str(page.title()))
                     if self.trial:
                         counter += 1
                         print(counter)
@@ -95,7 +91,6 @@ class RemoveBlocked(RemoveBase):
                         summary=summary + "user is blocked." +
                                 " ([[Wikipedia:Bots/Requests for approval/" + self.brfa + "|BRFA]])", minor=True,
                         botflag=True, force=True)
-                    #print("Saved " + str(page.title()))
                     if self.trial:
                         counter += 1
                         print(counter)
@@ -108,20 +103,14 @@ class RemoveBlocked(RemoveBase):
                         summary=summary + "user is blocked." +
                                 " ([[Wikipedia:Bots/Requests for approval/" + self.brfa + "|BRFA]])", minor=True,
                         botflag=True, force=True)
-                    #print("Saved " + str(page.title()))
                     if self.trial:
                         counter += 1
                         print(counter)
             if self.span is not None and type(self.span) != int:
-                #print(user.isAnonymous())
                 span1 = datetime.strptime(self.span, "%Y-%m-%dT%H:%M:%SZ")
                 if user.isAnonymous():
                     page_date = datetime.strptime(str(page.latest_revision.timestamp), "%Y-%m-%dT%H:%M:%SZ")
-                    #print(span1 > dt)
-                    #print(self.calc_difference(page.latest_revision.timestamp))
-                    #sample = {'year':2018,'month':02,'day':01}
-                    #b2 = date(sample[0], sample[1], d2)
-                    if page_date <= span1:#int(str(page.latest_revision.timestamp)[0:4]) <= self.span:
+                    if page_date <= span1:
                         self.log(page)
                         self.category_remove(self.target, page)
                         page.save(
@@ -131,7 +120,6 @@ class RemoveBlocked(RemoveBase):
                                     self.brfa + "|BRFA]])", minor=True,
                             botflag=True, force=True)
                 else:
-                    #print(user.username)
                     results = []
                     if user.last_event is not None:
                         event_timestamp = user.last_event.timestamp()
@@ -153,7 +141,6 @@ class RemoveBlocked(RemoveBase):
                     #Compare last event edit, last edit,
                     #last deleted edit to figure the most recent
                     newest_contrib_time = max(results)
-                    #print(newest_contrib_time)
 
                     if newest_contrib_time <= span1:
                         self.log(page)
@@ -202,7 +189,6 @@ class RemoveUnblocked(RemoveBase):
         for page in self.category:
             if page.title() == "Template:Uw-corpname":
                 continue
-            # print(page.title())
             if page.title()[:10] != "User talk:":
                 print("NOT RIGHT FORMAT " + page.title())
                 continue
@@ -218,4 +204,3 @@ class RemoveUnblocked(RemoveBase):
                     summary="Removing [[Category:" + self.cat_name + "]] as user is unblocked." +
                             " ([[Wikipedia:Bots/Requests for approval/" + self.brfa + "|BRFA]])", minor=True,
                     botflag=True, force=True)
-                #print("Saved " + str(page.title()))
