@@ -84,7 +84,7 @@ class RemoveBlocked(RemoveBase):
                     if self.trial:
                         counter += 1
                         print(counter)
-                elif user.isBlocked():
+                elif user.is_blocked():
                     self.log(page)
                     self.category_remove(self.target, page)
                     page.save(
@@ -96,7 +96,7 @@ class RemoveBlocked(RemoveBase):
                         print(counter)
             except KeyError:
                 #print("No global account")
-                if user.isBlocked():
+                if user.is_blocked():
                     self.log(page)
                     self.category_remove(self.target, page)
                     page.save(
@@ -138,10 +138,26 @@ class RemoveBlocked(RemoveBase):
                     except StopIteration:
                         pass # No deleted contribs
 
+                    if not results:
+                        page_date = datetime.strptime(str(page.latest_revision.timestamp), "%Y-%m-%dT%H:%M:%SZ")
+                        if page_date <= span1:
+                            self.log(page)
+                            self.category_remove(self.target, page)
+                            page.save(
+                                summary=summary + "talk page not edited in " +
+                                        self.calc_difference(page.latest_revision.timestamp) +
+                                        " and notice considered stale." + " ([[Wikipedia:Bots/Requests for approval/" +
+                                        self.brfa + "|BRFA]])", minor=True,
+                                botflag=True, force=True)
+                            return
+
                     #Compare last event edit, last edit,
                     #last deleted edit to figure the most recent
-                    newest_contrib_time = max(results)
-
+                    try:
+                        newest_contrib_time = max(results)
+                    except ValueError:
+                        print(page)
+                        raise
                     if newest_contrib_time <= span1:
                         self.log(page)
                         self.category_remove(self.target, page)
