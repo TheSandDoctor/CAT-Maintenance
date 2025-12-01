@@ -64,7 +64,7 @@ class RemoveBlocked(RemoveBase):
                 continue
             summary = "Removing [[Category:" + self.cat_name + "]] as "
             try:
-                if user.is_locked():
+                if not user.isAnonymous() and user.is_locked():
                     self.log(page)
                     self.category_remove(self.target, page)
                     page.save(
