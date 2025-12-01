@@ -34,17 +34,6 @@ class RemoveBase:
         user_raw = m.group(1)
         return pywikibot.User(self.site, user_raw)
 
-    def isLocked(self, username):
-        params = {
-            "action": "query",
-            "format": "json",
-            "meta": "globaluserinfo",
-            "guiuser": str(username),
-            "guiprop": "groups|merged|unattached"
-        }
-        result = self.session.get(url="https://en.wikipedia.org/w/api.php", params=params)
-        return 'locked' in result.json()["query"]["globaluserinfo"]
-
     def log(self, page):
         with open(self.log_filename, 'a+') as f:
             f.write(str(page.title()) + "\n")
@@ -75,7 +64,7 @@ class RemoveBlocked(RemoveBase):
                 continue
             summary = "Removing [[Category:" + self.cat_name + "]] as "
             try:
-                if self.isLocked(user.username):
+                if user.is_locked():
                     self.log(page)
                     self.category_remove(self.target, page)
                     page.save(
@@ -215,7 +204,7 @@ class RemoveUnblocked(RemoveBase):
                 print("NOT RIGHT FORMAT " + page.title())
                 continue
             user = self.generate_user(page)
-            if not user.isBlocked():
+            if not user.is_blocked():
                 self.log(page)
                 old_t = page.text
                 self.category_remove(self.target, page)
