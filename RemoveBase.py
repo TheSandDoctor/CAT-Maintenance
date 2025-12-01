@@ -3,6 +3,7 @@ import re
 import requests
 from datetime import *
 from dateutil import relativedelta
+from pywikibot.exceptions import InvalidTitleError, APIMWError
 
 class RemoveBase:
     def __init__(self, log_name, category, trial = False):
@@ -13,7 +14,7 @@ class RemoveBase:
         self.session = requests.Session()
         try:
             self.category = pywikibot.Category(self.site, category).articles()
-        except pywikibot.InvalidTitle:
+        except InvalidTitleError:
             print("\nBad category title")
             exit()
         self.cat_name = category
@@ -70,7 +71,7 @@ class RemoveBlocked(RemoveBase):
             try:
                 user = self.generate_user(page)
             except AttributeError:
-                print("Failed" + page.title())
+                print("Failed " + page.title())
                 continue
             summary = "Removing [[Category:" + self.cat_name + "]] as "
             try:
@@ -137,6 +138,8 @@ class RemoveBlocked(RemoveBase):
                         results.append(del_ts)
                     except StopIteration:
                         pass # No deleted contribs
+                    except APIMWError:
+                        print("Failed to get deleted contributions for " + page.title())
 
                     if not results:
                         page_date = datetime.strptime(str(page.latest_revision.timestamp), "%Y-%m-%dT%H:%M:%SZ")
@@ -150,6 +153,9 @@ class RemoveBlocked(RemoveBase):
                                         self.brfa + "|BRFA]])", minor=True,
                                 botflag=True, force=True)
                             return
+                        return # Page edit more recent than our cutoff, so do nothing and return
+                    # else:
+                    #     newest_contrib_time = max(results)
 
                     #Compare last event edit, last edit,
                     #last deleted edit to figure the most recent
