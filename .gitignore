@@ -1,4 +1,5 @@
 *.txt
+!requirements.txt
 *.lwp
 user-config.py
 user-password.py
