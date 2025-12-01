@@ -4,7 +4,8 @@ user-password.py
 apicache-py3/
 pywikibot.lwp
 throttle.ctrl
-venv/
+.venv/
 .idea/
 .DS_Store
 __pycache__/
+apicache/
