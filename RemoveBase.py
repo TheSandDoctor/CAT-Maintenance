@@ -110,7 +110,6 @@ class RemoveBlocked(RemoveBase):
                     print(counter)
                 return counter
         except KeyError:
-            #print("No global account")
             if user.is_blocked():
                 self.log(page)
                 self.category_remove(target, page)
@@ -170,11 +169,8 @@ class RemoveBlocked(RemoveBase):
                             botflag=True, force=True)
                         return counter
                     return counter # Page edit more recent than our cutoff, so do nothing and return
-                # else:
-                #     newest_contrib_time = max(results)
 
-                #Compare last event edit, last edit,
-                #last deleted edit to figure the most recent
+                # Compare last event edit, last edit, last deleted edit to figure the most recent
                 try:
                     newest_contrib_time = max(results)
                 except ValueError:
@@ -249,7 +245,7 @@ class RemoveBlocked(RemoveBase):
         elif diff.hours == 1:
             result += "%s hour " % diff.hours
 
-        return result  # %(diff.years, diff.months, diff.days, diff.hours)
+        return result
 
 
 class RemoveUnblocked(RemoveBase):
@@ -263,7 +259,6 @@ class RemoveUnblocked(RemoveBase):
         if self.process_subcategories:
             # Process all subcategories of the parent category
             for subcat in self.parent_category_obj.subcategories():  # type: pywikibot.Category
-                # Get subcategory name using .title() method
                 subcat_title = subcat.title()
                 # Extract name part (remove "Category:" prefix)
                 if subcat_title.startswith("Category:"):
@@ -295,7 +290,7 @@ class RemoveUnblocked(RemoveBase):
                             botflag=True, force=True)
             return
         
-        # Single-category mode (existing logic)
+        # Single-category mode
         for page in self.category:
             if page.title() == "Template:Uw-corpname":
                 continue
