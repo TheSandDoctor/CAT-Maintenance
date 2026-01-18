@@ -9,6 +9,7 @@ class RemoveBase:
     def __init__(self, log_name, category, trial = False, process_subcategories = False):
         self.pattern = r'(?:User talk:)([^/\n]+)'
         self.site = pywikibot.Site()  # fam="wikipedia", code="en", user="TheSandBot")
+        self.site.login()
         self.count = 0
         self.log_filename = log_name
         self.process_subcategories = process_subcategories
