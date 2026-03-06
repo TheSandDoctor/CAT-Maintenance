@@ -93,7 +93,7 @@ class RemoveBlocked(RemoveBase):
                 page.save(
                     summary=summary + "user is locked." +
                             " ([[Wikipedia:Bots/Requests for approval/" + self.brfa + "|BRFA]])", minor=True,
-                    botflag=True, force=True)
+                    bot=True, force=True)
                 if self.trial:
                     counter += 1
                     print(counter)
@@ -104,7 +104,7 @@ class RemoveBlocked(RemoveBase):
                 page.save(
                     summary=summary + "user is blocked." +
                             " ([[Wikipedia:Bots/Requests for approval/" + self.brfa + "|BRFA]])", minor=True,
-                    botflag=True, force=True)
+                    bot=True, force=True)
                 if self.trial:
                     counter += 1
                     print(counter)
@@ -116,7 +116,7 @@ class RemoveBlocked(RemoveBase):
                 page.save(
                     summary=summary + "user is blocked." +
                             " ([[Wikipedia:Bots/Requests for approval/" + self.brfa + "|BRFA]])", minor=True,
-                    botflag=True, force=True)
+                    bot=True, force=True)
                 if self.trial:
                     counter += 1
                     print(counter)
@@ -133,7 +133,7 @@ class RemoveBlocked(RemoveBase):
                                 self.calc_difference(page.latest_revision.timestamp) +
                                 " and notice considered stale." + " ([[Wikipedia:Bots/Requests for approval/" +
                                 self.brfa + "|BRFA]])", minor=True,
-                        botflag=True, force=True)
+                        bot=True, force=True)
                 return counter
             else:
                 results = []
@@ -166,7 +166,7 @@ class RemoveBlocked(RemoveBase):
                                     self.calc_difference(page.latest_revision.timestamp) +
                                     " and notice considered stale." + " ([[Wikipedia:Bots/Requests for approval/" +
                                     self.brfa + "|BRFA]])", minor=True,
-                            botflag=True, force=True)
+                            bot=True, force=True)
                         return counter
                     return counter # Page edit more recent than our cutoff, so do nothing and return
 
@@ -184,7 +184,7 @@ class RemoveBlocked(RemoveBase):
                                 self.calc_difference(newest_contrib_time) +
                                 " and notice considered stale."+ " ([[Wikipedia:Bots/Requests for approval/" +
                                 self.brfa + "|BRFA]])", minor=True,
-                                botflag=True, force=True
+                                bot=True, force=True
                     )
         return counter
 
@@ -287,7 +287,7 @@ class RemoveUnblocked(RemoveBase):
                         page.save(
                             summary="Removing [[Category:" + cat_name + "]] as user is unblocked." +
                                     " ([[Wikipedia:Bots/Requests for approval/" + self.brfa + "|BRFA]])", minor=True,
-                            botflag=True, force=True)
+                            bot=True, force=True)
             return
         
         # Single-category mode
@@ -308,4 +308,4 @@ class RemoveUnblocked(RemoveBase):
                 page.save(
                     summary="Removing [[Category:" + self.cat_name + "]] as user is unblocked." +
                             " ([[Wikipedia:Bots/Requests for approval/" + self.brfa + "|BRFA]])", minor=True,
-                    botflag=True, force=True)
+                    bot=True, force=True)
